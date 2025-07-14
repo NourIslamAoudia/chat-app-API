@@ -25,6 +25,7 @@ export const getMessages = asyncHandler(async (req, res) => {
 
 });
 
+
 export const sendMessage = asyncHandler(async (req, res) => {
     const userToChatId = req.params.id;
     const myId = req.user._id;
@@ -44,7 +45,7 @@ export const sendMessage = asyncHandler(async (req, res) => {
     let imageUrl;
     if (image) { // Si l'utilisateur envoie une image
         try {
-            // 🔹 Upload de l'image sur Cloudinary
+            // Upload de l'image sur Cloudinary
             const uploadedResponse = await cloudinary.uploader.upload(image, {
                 upload_preset: "message_images",
             });

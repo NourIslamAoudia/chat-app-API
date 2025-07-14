@@ -11,7 +11,7 @@ export const protectRoute = async (req, res, next) => {
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         if(!decoded){
-            return res.status(401).json({ error: "Not authorized - Token is Invalide" });
+            return res.status(401).json({ error: "Not authorized - Token is Invalid" });
         }
 
         const user = await User.findById(decoded.userId).select("-password");
@@ -19,7 +19,7 @@ export const protectRoute = async (req, res, next) => {
         next();
 
     } catch (error) {
-        console.error("erro in the middleware protectRoute ", error);
+        console.error("error in the middleware protectRoute ", error);
         return res.status(500).json({ error: error.message });
     }
 }

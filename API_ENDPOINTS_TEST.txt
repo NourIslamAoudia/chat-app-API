@@ -1,0 +1,322 @@
+================================================
+            CHAT APP API - ENDPOINTS DE TEST
+================================================
+
+URL DE BASE: http://localhost:5000
+
+================================================
+1. AUTHENTIFICATION - INSCRIPTION
+================================================
+Méthode: POST
+URL: http://localhost:5000/api/auth/signup
+Headers: 
+  Content-Type: application/json
+
+Body (JSON):
+{
+  "email": "test@example.com",
+  "fullName": "Test User",
+  "password": "TestPass123"
+}
+
+Réponse attendue:
+{
+  "message": "User created successfully",
+  "user": {
+    "_id": "...",
+    "email": "test911@example.com",
+    "fullName": "Test User",
+    "profilPic": null
+  }
+}
+
+================================================
+2. AUTHENTIFICATION - CONNEXION
+================================================
+Méthode: POST
+URL: http://localhost:5000/api/auth/login
+Headers: 
+  Content-Type: application/json
+
+Body (JSON):
+{
+  "email": "test911@example.com",
+  "password": "TestPass123"
+}
+
+Réponse attendue:
+{
+  "message": "Login successful",
+  "user": {
+    "_id": "...",
+    "email": "test@example.com",
+    "fullName": "Test User",
+    "profilPic": ""
+  }
+}
+
+IMPORTANT: Après le login, le token JWT est stocké automatiquement dans un cookie.
+
+================================================
+3. AUTHENTIFICATION - VÉRIFICATION DU STATUT
+================================================
+Méthode: GET
+URL: http://localhost:5000/api/auth/check-auth
+Headers: 
+  (Le cookie accessToken doit être présent)
+
+Réponse attendue:
+{
+  "user": {
+    "_id": "...",
+    "email": "test@example.com",
+    "fullName": "Test User",
+    "profilPic": ""
+  }
+}
+
+================================================
+4. AUTHENTIFICATION - MISE À JOUR DU PROFIL
+================================================
+Méthode: POST
+URL: http://localhost:5000/api/auth/update-profiel
+Headers: 
+  Content-Type: application/json
+  (Le cookie accessToken doit être présent)
+
+Body (JSON):
+{
+  "profilPic": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD..."
+}
+
+Note: Remplacez par une vraie image en base64 ou utilisez un service comme base64-image.de
+
+Réponse attendue:
+{
+  "message": "Profile updated successfully",
+  "user": {
+    "email": "test@example.com",
+    "fullName": "Test User",
+    "profilPic": "https://res.cloudinary.com/..."
+  }
+}
+
+================================================
+5. AUTHENTIFICATION - DÉCONNEXION
+================================================
+Méthode: POST
+URL: http://localhost:5000/api/auth/logout
+Headers: 
+  (Le cookie accessToken doit être présent)
+
+Réponse attendue:
+{
+  "message": "Logged out"
+}
+
+================================================
+6. MESSAGES - LISTE DES UTILISATEURS
+================================================
+Méthode: GET
+URL: http://localhost:5000/api/message/users
+Headers: 
+  (Le cookie accessToken doit être présent)
+
+Réponse attendue:
+[
+  {
+    "_id": "...",
+    "email": "user2@example.com",
+    "fullName": "User 2",
+    "profilPic": "",
+    "createdAt": "...",
+    "updatedAt": "..."
+  }
+]
+
+================================================
+7. MESSAGES - RÉCUPÉRER LES MESSAGES D'UNE CONVERSATION
+================================================
+Méthode: GET
+URL: http://localhost:5000/api/message/{USER_ID}
+Headers: 
+  (Le cookie accessToken doit être présent)
+
+Exemple: http://localhost:5000/api/message/60d5ec49f1b2c72b1c8b4567
+
+Réponse attendue:
+[
+  {
+    "_id": "...",
+    "senderId": "...",
+    "receiverId": "...",
+    "text": "Hello!",
+    "image": "",
+    "createdAt": "...",
+    "updatedAt": "..."
+  }
+]
+
+================================================
+8. MESSAGES - ENVOYER UN MESSAGE TEXTE
+================================================
+Méthode: POST
+URL: http://localhost:5000/api/message/send/{USER_ID}
+Headers: 
+  Content-Type: application/json
+  (Le cookie accessToken doit être présent)
+
+Body (JSON):
+{
+  "text": "Hello, this is a test message!"
+}
+
+Exemple d'URL: http://localhost:5000/api/message/send/60d5ec49f1b2c72b1c8b4567
+
+Réponse attendue:
+{
+  "_id": "...",
+  "senderId": "...",
+  "receiverId": "...",
+  "text": "Hello, this is a test message!",
+  "createdAt": "...",
+  "updatedAt": "..."
+}
+
+================================================
+9. MESSAGES - ENVOYER UN MESSAGE AVEC IMAGE
+================================================
+Méthode: POST
+URL: http://localhost:5000/api/message/send/{USER_ID}
+Headers: 
+  Content-Type: application/json
+  (Le cookie accessToken doit être présent)
+
+Body (JSON):
+{
+  "text": "Check out this image!",
+  "image": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD..."
+}
+
+Réponse attendue:
+{
+  "_id": "...",
+  "senderId": "...",
+  "receiverId": "...",
+  "text": "Check out this image!",
+  "image": "https://res.cloudinary.com/...",
+  "createdAt": "...",
+  "updatedAt": "..."
+}
+
+================================================
+10. MESSAGES - ENVOYER SEULEMENT UNE IMAGE
+================================================
+Méthode: POST
+URL: http://localhost:5000/api/message/send/{USER_ID}
+Headers: 
+  Content-Type: application/json
+  (Le cookie accessToken doit être présent)
+
+Body (JSON):
+{
+  "image": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD..."
+}
+
+================================================
+11. TEST DE BASE - VÉRIFIER QUE LE SERVEUR FONCTIONNE
+================================================
+Méthode: GET
+URL: http://localhost:5000/
+
+Réponse attendue:
+{
+  "message": "all good"
+}
+
+================================================
+CONFIGURATION POSTMAN
+================================================
+
+1. COOKIES AUTOMATIQUES:
+   - Allez dans Settings → General
+   - Activez "Send cookies automatically"
+   - Cela permettra à Postman de gérer automatiquement le cookie accessToken
+
+2. VARIABLES D'ENVIRONNEMENT:
+   Créez ces variables dans votre environnement Postman:
+   - baseUrl = http://localhost:5000
+   - userId = (ID d'un utilisateur pour les tests de messages)
+
+3. COLLECTION ORGANISATION:
+   Organisez vos requêtes dans cet ordre:
+   1. Test serveur (GET /)
+   2. Inscription (POST /api/auth/signup)
+   3. Connexion (POST /api/auth/login)
+   4. Vérification auth (GET /api/auth/check-auth)
+   5. Liste utilisateurs (GET /api/message/users)
+   6. Envoyer message (POST /api/message/send/:id)
+   7. Récupérer messages (GET /api/message/:id)
+   8. Mise à jour profil (POST /api/auth/update-profiel)
+   9. Déconnexion (POST /api/auth/logout)
+
+================================================
+ÉTAPES DE TEST RECOMMANDÉES
+================================================
+
+1. Démarrez le serveur: npm run dev
+2. Testez la route de base: GET /
+3. Inscrivez un premier utilisateur: POST /api/auth/signup
+4. Connectez-vous: POST /api/auth/login
+5. Vérifiez l'authentification: GET /api/auth/check-auth
+6. Inscrivez un deuxième utilisateur (répétez étapes 3-5)
+7. Avec le premier utilisateur, récupérez la liste: GET /api/message/users
+8. Envoyez un message au deuxième utilisateur: POST /api/message/send/:id
+9. Récupérez la conversation: GET /api/message/:id
+10. Testez la mise à jour du profil: POST /api/auth/update-profiel
+11. Déconnectez-vous: POST /api/auth/logout
+
+================================================
+CODES D'ERREUR ATTENDUS
+================================================
+
+400 Bad Request:
+- Champs requis manquants
+- Format d'email invalide
+- Mot de passe trop faible
+- Message vide
+
+401 Unauthorized:
+- Token manquant ou invalide
+- Identifiants incorrects
+
+404 Not Found:
+- Utilisateur destinataire introuvable
+
+409 Conflict:
+- Email déjà utilisé lors de l'inscription
+
+500 Internal Server Error:
+- Erreur serveur (base de données, Cloudinary, etc.)
+
+================================================
+NOTES IMPORTANTES
+================================================
+
+1. Assurez-vous que MongoDB est connecté avant de tester
+2. Vérifiez que les variables d'environnement sont correctement configurées
+3. Pour les images, utilisez un convertisseur base64 en ligne
+4. Le serveur fonctionne sur le port 5000 (pas 3000 comme dans certains exemples)
+5. Tous les endpoints de messages nécessitent une authentification
+6. Les cookies sont gérés automatiquement par le navigateur/Postman
+
+================================================
+DÉPANNAGE
+================================================
+
+Si vous obtenez des erreurs:
+1. Vérifiez que le serveur est démarré: npm run dev
+2. Vérifiez la connexion MongoDB dans les logs
+3. Assurez-vous que Cloudinary est configuré pour les uploads d'images
+4. Vérifiez que les cookies sont envoyés avec les requêtes authentifiées
+5. Consultez la console du serveur pour les erreurs détaillées
