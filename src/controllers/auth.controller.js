@@ -99,7 +99,10 @@ export const login = asyncHandler(async (req, res) => {
     });
 });
 
-
+export const checkAuth = asyncHandler( (req, res) => {
+    const user = req.user;
+    res.status(200).json({user}); 
+});
 
 export const logout = asyncHandler( async (req, res) => {
     res.clearCookie("accessToken");
@@ -153,11 +156,6 @@ export const updateProfiel = asyncHandler(async (req, res) => {
     }
 });
 
-
-export const checkAuth = asyncHandler( (req, res) => {
-    const user = req.user;
-    res.status(200).json({user}); 
-});
 
 
 
